@@ -213,6 +213,34 @@ label span,
   gap: 24px;
 }
 
+.install-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(49, 79, 97, 0.96), rgba(34, 51, 62, 0.96));
+  color: #fff6ef;
+  box-shadow: var(--shadow);
+}
+
+.install-banner h2 {
+  margin: 0;
+  font-family: "Noto Serif SC", serif;
+}
+
+.install-banner .panel__hint,
+.install-banner .panel__eyebrow {
+  color: rgba(255, 246, 239, 0.78);
+}
+
+.install-banner__button {
+  margin-top: 0;
+  min-width: 140px;
+  background: linear-gradient(135deg, #f0a28f, #d96c54);
+}
+
 .panel {
   padding: 28px;
 }
@@ -524,6 +552,11 @@ textarea {
   .form-grid,
   .grid-2 {
     grid-template-columns: 1fr;
+  }
+
+  .install-banner {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .hero h1 {

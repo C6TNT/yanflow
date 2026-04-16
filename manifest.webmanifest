@@ -1,0 +1,18 @@
+{
+  "name": "YanFlow",
+  "short_name": "YanFlow",
+  "description": "面向医学考研场景的遗忘曲线复习规划工具。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6f1ea",
+  "theme_color": "#d96c54",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

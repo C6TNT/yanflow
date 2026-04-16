@@ -35,17 +35,21 @@ const el = {
   summaryDue: document.querySelector("#summary-due"),
   summaryDone: document.querySelector("#summary-done"),
   summaryOverdue: document.querySelector("#summary-overdue"),
+  installBanner: document.querySelector("#install-banner"),
+  installButton: document.querySelector("#install-button"),
   taskTemplate: document.querySelector("#task-card-template"),
   itemTemplate: document.querySelector("#item-card-template"),
 };
 
 let state = loadState();
+let installPromptEvent = null;
 
 bootstrap();
 
 function bootstrap() {
   bindEvents();
   seedDemoData();
+  registerServiceWorker();
   render();
 }
 
@@ -65,6 +69,18 @@ function bindEvents() {
   });
 
   el.todayTaskList.addEventListener("click", handleTaskAction);
+  el.installButton.addEventListener("click", handleInstallClick);
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPromptEvent = event;
+    el.installBanner.hidden = false;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    installPromptEvent = null;
+    el.installBanner.hidden = true;
+  });
 }
 
 function loadState() {
@@ -263,6 +279,7 @@ function render() {
   renderSubjectProgress();
   renderTimeline();
   renderItems();
+  renderInstallBanner();
 }
 
 function ensureSubjectSelect() {
@@ -490,6 +507,47 @@ function countUpcomingDays(days) {
     (sum, date) => sum + tasks.filter((task) => !task.completedAt && task.scheduledDate === date).length,
     0,
   );
+}
+
+function renderInstallBanner() {
+  const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+
+  if (isStandalone) {
+    el.installBanner.hidden = true;
+    return;
+  }
+
+  if (installPromptEvent || isIos) {
+    el.installBanner.hidden = false;
+    el.installButton.hidden = isIos;
+    return;
+  }
+
+  el.installBanner.hidden = true;
+}
+
+async function handleInstallClick() {
+  if (!installPromptEvent) {
+    return;
+  }
+
+  installPromptEvent.prompt();
+  await installPromptEvent.userChoice;
+  installPromptEvent = null;
+  renderInstallBanner();
+}
+
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+      console.warn("Service worker register failed:", error);
+    });
+  });
 }
 
 function createId() {

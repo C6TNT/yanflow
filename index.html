@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YanFlow | 医学考研复习流</title>
+    <meta name="theme-color" content="#d96c54" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="YanFlow" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -56,6 +63,19 @@
       </header>
 
       <main class="dashboard">
+        <section class="install-banner" id="install-banner" hidden>
+          <div>
+            <p class="panel__eyebrow">Install</p>
+            <h2>把 YanFlow 添加到平板桌面</h2>
+            <p class="panel__hint">
+              Android 平板可直接点击安装；iPad 可用 Safari 的“添加到主屏幕”。
+            </p>
+          </div>
+          <button class="solid-button install-banner__button" id="install-button" type="button">
+            安装 App
+          </button>
+        </section>
+
         <section class="panel panel--accent" id="quick-add">
           <div class="panel__header">
             <div>
