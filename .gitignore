@@ -1,2 +1,8 @@
 .DS_Store
 Thumbs.db
+android-sdk/
+tools/
+android-build/generated/
+android-build/keystore/
+android-build/output/*
+!android-build/output/YanFlow-release.apk

@@ -17,6 +17,12 @@ YanFlow 是一款面向医学考研场景的轻量级复习规划工具，围绕
 
 详细使用说明见 `USAGE.md`。
 
+## Android APK
+
+- 已提供 Android 打包脚本：`build-android.ps1`
+- 默认输出 APK：`android-build/output/YanFlow-release.apk`
+- Android 外壳会把当前网页版本打包进原生 `WebView`，适合直接装到平板
+
 ## 本地运行
 
 这是一个零构建的静态前端项目，直接打开 `index.html` 即可使用。
