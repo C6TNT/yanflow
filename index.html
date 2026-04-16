@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YanFlow | 医学考研复习流</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">YANFLOW V1</p>
+          <h1>把“该复习什么”这件事，交给系统自动处理。</h1>
+          <p class="hero__text">
+            面向临床医学考研的遗忘曲线复习工具。录入章节后，自动排出后续复习节点，
+            每天只需要看今天的任务。
+          </p>
+          <div class="hero__actions">
+            <button class="ghost-button" data-scroll-target="quick-add">录入新内容</button>
+            <button class="ghost-button ghost-button--light" data-scroll-target="today-panel">
+              查看今日任务
+            </button>
+          </div>
+        </div>
+        <div class="hero__card">
+          <div class="hero__card-top">
+            <span>考研倒计时</span>
+            <strong id="exam-countdown">未设置</strong>
+          </div>
+          <div class="hero__card-grid">
+            <div>
+              <span>今日待复习</span>
+              <strong id="hero-due-count">0</strong>
+            </div>
+            <div>
+              <span>完成率</span>
+              <strong id="hero-done-rate">0%</strong>
+            </div>
+            <div>
+              <span>总条目</span>
+              <strong id="hero-total-items">0</strong>
+            </div>
+            <div>
+              <span>未来 7 天</span>
+              <strong id="hero-upcoming-count">0</strong>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="panel panel--accent" id="quick-add">
+          <div class="panel__header">
+            <div>
+              <p class="panel__eyebrow">Quick Start</p>
+              <h2>新增学习内容</h2>
+            </div>
+            <p class="panel__hint">先录入科目与章节，系统会自动生成后续复习时间线。</p>
+          </div>
+
+          <div class="form-grid">
+            <form class="form-card" id="subject-form">
+              <h3>新建科目</h3>
+              <label>
+                <span>科目名称</span>
+                <input id="subject-name" type="text" placeholder="例如：生理学" required />
+              </label>
+              <label>
+                <span>主题颜色</span>
+                <input id="subject-color" type="color" value="#d96c54" />
+              </label>
+              <button type="submit" class="solid-button">添加科目</button>
+            </form>
+
+            <form class="form-card form-card--wide" id="item-form">
+              <h3>录入章节</h3>
+              <div class="form-card__grid">
+                <label>
+                  <span>所属科目</span>
+                  <select id="item-subject" required></select>
+                </label>
+                <label>
+                  <span>首次学习日期</span>
+                  <input id="item-start-date" type="date" required />
+                </label>
+                <label class="form-card__span-2">
+                  <span>学习内容</span>
+                  <input
+                    id="item-title"
+                    type="text"
+                    placeholder="例如：生理学 第1章 细胞的基本功能"
+                    required
+                  />
+                </label>
+                <label class="form-card__span-2">
+                  <span>备注</span>
+                  <textarea
+                    id="item-notes"
+                    rows="3"
+                    placeholder="可写上重点、易错点或老师强调的内容"
+                  ></textarea>
+                </label>
+              </div>
+              <button type="submit" class="solid-button">生成复习计划</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="grid-2">
+          <section class="panel" id="today-panel">
+            <div class="panel__header">
+              <div>
+                <p class="panel__eyebrow">Today</p>
+                <h2>今日任务</h2>
+              </div>
+              <div class="date-pill" id="today-label"></div>
+            </div>
+            <div class="task-summary">
+              <div class="task-summary__item">
+                <span>待处理</span>
+                <strong id="summary-due">0</strong>
+              </div>
+              <div class="task-summary__item">
+                <span>已完成</span>
+                <strong id="summary-done">0</strong>
+              </div>
+              <div class="task-summary__item">
+                <span>已逾期</span>
+                <strong id="summary-overdue">0</strong>
+              </div>
+            </div>
+            <div class="task-list" id="today-task-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel__header">
+              <div>
+                <p class="panel__eyebrow">Progress</p>
+                <h2>复习概况</h2>
+              </div>
+            </div>
+            <div class="stats-grid" id="subject-progress"></div>
+            <div class="mini-timeline">
+              <div class="mini-timeline__header">
+                <h3>未来 7 天任务分布</h3>
+                <span id="timeline-total">0 项</span>
+              </div>
+              <div class="timeline-bars" id="timeline-bars"></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="grid-2">
+          <section class="panel">
+            <div class="panel__header">
+              <div>
+                <p class="panel__eyebrow">Plan</p>
+                <h2>全部学习条目</h2>
+              </div>
+              <p class="panel__hint">查看每个章节当前进行到第几轮复习。</p>
+            </div>
+            <div class="item-list" id="item-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel__header">
+              <div>
+                <p class="panel__eyebrow">Settings</p>
+                <h2>考试与曲线设置</h2>
+              </div>
+              <p class="panel__hint">V1 支持设置考试日期和默认复习节点。</p>
+            </div>
+            <form class="settings-form" id="settings-form">
+              <label>
+                <span>考试日期</span>
+                <input id="exam-date" type="date" />
+              </label>
+              <label>
+                <span>遗忘曲线节点（天）</span>
+                <input id="review-pattern" type="text" placeholder="1,2,4,7,15,30" />
+              </label>
+              <button type="submit" class="solid-button">保存设置</button>
+            </form>
+
+            <div class="tips-card">
+              <h3>V1 已支持</h3>
+              <ul>
+                <li>新增科目与章节</li>
+                <li>自动生成复习节点</li>
+                <li>今日任务与逾期任务聚合</li>
+                <li>完成、顺延、掌握反馈</li>
+                <li>本地持久化保存</li>
+              </ul>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <template id="task-card-template">
+      <article class="task-card">
+        <div class="task-card__head">
+          <div>
+            <p class="task-card__subject"></p>
+            <h3 class="task-card__title"></h3>
+          </div>
+          <span class="task-card__badge"></span>
+        </div>
+        <p class="task-card__meta"></p>
+        <p class="task-card__notes"></p>
+        <div class="task-card__actions">
+          <button data-feedback="forgot" class="tag-button">基本忘了</button>
+          <button data-feedback="okay" class="tag-button">有点模糊</button>
+          <button data-feedback="good" class="tag-button">记得很牢</button>
+          <button data-action="postpone" class="link-button">顺延 1 天</button>
+        </div>
+      </article>
+    </template>
+
+    <template id="item-card-template">
+      <article class="item-card">
+        <div class="item-card__head">
+          <div>
+            <p class="item-card__subject"></p>
+            <h3 class="item-card__title"></h3>
+          </div>
+          <span class="item-card__status"></span>
+        </div>
+        <p class="item-card__schedule"></p>
+        <div class="round-list"></div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
